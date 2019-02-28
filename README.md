@@ -1,3 +1,5 @@
+// todo: rename repository
+// todo: in screenshots: patients grid hiding first record
 # Sample Hospital Management web application
 RavenDB is an open-source NoSQL document store database. It is fully transactional,multi-platform and high availability distributed data store which support clients for a varity of programming languages including Java.
 The following sample Hospital Management app is built upon the dynamic document based structure that RavenDB represents.
@@ -32,12 +34,13 @@ When it comes to persisting data a Java programmer tends to annotate Java POJO w
 RavenDB doesn’t use tables. Instead, it creates objects as documents, and multiple documents are known as a collection. 
 In RavenDB, a domain object is mapped to a single document. In this regard there is no need of special class treatment other then having a default no args constructor. The sample model consists of 4 basic entitities, one of which is embedded as an array to demonstrate the power of grouping and fetching queries in RavenDB.
 
+// todo: Add class diagram of entities in tutorial
+// todo: In patient class, show the json as well (as an image from the management studio)
+
 1. Patient - stored as a separate collection
 ```java
 public class Patient implements Serializable{
-    public enum Gender{
-    	MALE,
-    	FEMALE;
+    ...
         
     	@JsonCreator
         public static Gender convert(String status){
@@ -148,7 +151,8 @@ Each POJO has a property name "id" which will triger the usage RavenDB algorithm
 The convention is that entities get the identifiers in the following format collection/number-tag so the programmer is not concerned with the uniqueness of each document in a collection.
 
 ## RavenDB connector
-The focal point is the [RavenDB Java connector](https://github.com/ravendb/ravendb-jvm-client), which is codded as a singleton. It
+// todo: also describe how we should add the package (what to add to the pom.xml..)
+The focal point is the [RavenDB Java connector](https://github.com/ravendb/ravendb-jvm-client)/*todo: instead of github link, please provide maven link*/, which is codded as a singleton. It
 instantiates DocumentStore object to set up connection with the Server and download various configuration metadata.
 The DocumentStore is capable of working with multiple databases and for proper operation it is recommend having only one instance of it per application.
 ```java
@@ -172,18 +176,21 @@ INSTANCE;
 Patient entity is given as an example only. 
 
 ![Patient CRUD](/screenshots/p_edit.png)
-
+// todo: mention the connection between unit of work and JPA, definition here: https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-transaction-handle-example/ might help
 For any operation we want to perform on RavenDB, we start by obtaining a new Session object from the document store. The Session object will contain everything we need to perform any operation necessary. It implements the Unit of Work pattern and is capable of batching the requests to save expensive remote calls. In contrast to a DocumentStore it is a lightweight object and can be created more frequently. For example, in web applications, a common (and recommended) pattern is to create a session per request.
 
-Create operation inserts a new document. Each document contains a unique ID that identifies it, data and adjacent metadata, both stored in JSON format. The metadata contains information describing the document, e.g. the last modification date (@last-modified property) or the collection (@collection property) assignment. As alreay mentioned we will use the default algoritm for letting RavenDB generate unique ID for our entities by specifing a property named "id" in each entity. 
+// todo: when citing @last-modified, @collection or any other implementation related term, please use code citation `code term`
+Create operation inserts a new document. Each document contains a unique ID that identifies it, data and adjacent metadata, both stored in JSON format. The metadata contains information describing the document, e.g. the last modification date (`@last-modified` property) or the collection (@collection property) assignment. As alreay mentioned we will use the default algoritm for letting RavenDB generate unique ID for our entities by specifing a property named "id" in each entity.
 
 ```java
 public void create(Patient patient) {
+// todo: in try blocks, please make sure it's short as possible, even if needed to define an additional variable to hold the "store"
 		 try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {
 			 
 			   session.store(patient);
 				 
-	           if(patient.getAttachment()!=null){	        	 
+	           if(patient.getAttachment()!=null){
+	                // todo: please try to avoid long lines like that and try to split it into shorter expressions
 			     	session.advanced().attachments().store(patient,patient.getAttachment().getName(),patient.getAttachment().getInputStream(),patient.getAttachment().getMimeType());
 	           }
 	           session.saveChanges();
@@ -231,6 +238,7 @@ Update operation is worth noting - it handles optimistic conqurrency control and
 ## Paging on large record sets
 Paging through large data is one of the most common operations with RavenDB. A typical scenario is the need to display results in chunks in a lazy loading or pagable grid. The grid is configured to first obtain the total amount of records to shaow and then lazily as the user scrolls up and down to obtain records by batches of 50. For the patients grid, the corresponding attachements are also obtained and streamed into a convinient byte array to show in one of the grid columns. 
 
+// todo: please use query statistics in order to get the overall result set
 ![Patient CRUD](/screenshots/p_paging.png)
 
 ```java
