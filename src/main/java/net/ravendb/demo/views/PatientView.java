@@ -44,6 +44,7 @@ import net.ravendb.demo.presenters.PatientViewable;
 @PageTitle(value = "Hospital Management")
 public class PatientView extends VerticalLayout implements PatientViewable {
 
+	// todo: create and maintain a single session on the patient view level, in 'onAttach' we want to open it, and in 'onDetach' we want to 'close' it
 	private final PatientViewListener presenter;
 	private Grid<Patient> grid;
 	private Button edit, delete, visits;

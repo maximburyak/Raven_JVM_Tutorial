@@ -31,10 +31,12 @@ public class PatientPresenter implements PatientViewListener {
 	public PatientPresenter(PatientViewable view) {
 		this.view = view;
 	}
+
 	@Override
 	public int getPatientsCount() {
 		 try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {			 
-			 return session.query(Patient.class).count();			 			 			 
+			 return session.query(Patient.class).count();
+
 		 }
 	}
 
@@ -43,14 +45,18 @@ public class PatientPresenter implements PatientViewListener {
 		   try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {
 				   Collection<Patient> list=null;
 
-				   if(order){
+			   Reference<QueryStatistics> statsRef = new Reference<>();
+
+			   if(order){
 					   IDocumentQuery<Patient>  query = session.query(Patient.class);
-					   list= query.orderBy("birthDate").skip(offset).take(limit).toList();
+					   list= query.orderBy("birthDate").skip(offset).take(limit).statistics(statsRef).toList();
 				     }else{
 				       IDocumentQuery<Patient> query = session.query(Patient.class);
-				       list= query.skip(offset).take(limit).toList();	 
+				       list= query.skip(offset).take(limit).statistics(statsRef).toList();
 				     }
-				   
+
+				     // todo: try using total results from statistics in an "immutable pair"
+				     int totalResults = statsRef.value.getTotalResults();
 				   
 				   for(Patient patient:list){
 						 AttachmentName[] names=session.advanced().attachments().getNames(patient);					

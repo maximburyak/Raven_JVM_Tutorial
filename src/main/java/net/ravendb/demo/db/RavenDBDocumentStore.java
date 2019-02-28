@@ -9,11 +9,14 @@ INSTANCE;
 	private static IDocumentStore store;
 
     static {
-        store = new DocumentStore("http://127.0.0.1:18080", "Hospital");
+        store = new DocumentStore("http://127.0.0.1:18080", // todo: use the overload that provides array of url strings
+
+                "Hospital");
+
     }
 
     public IDocumentStore getStore() {
-    	store.initialize();
+    	store.initialize(); // todo: call store.initialize right after we create the store, it's a singletone anyway
         return store;
     }
 }
