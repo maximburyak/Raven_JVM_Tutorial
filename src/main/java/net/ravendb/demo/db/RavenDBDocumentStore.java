@@ -3,6 +3,7 @@ package net.ravendb.demo.db;
 import net.ravendb.client.documents.DocumentStore;
 import net.ravendb.client.documents.IDocumentStore;
 
+// todo: please implement eager intialization of singleton, like in: https://ravendb.net/docs/article-page/4.1/java/client-api/creating-document-store#singleton
 public enum RavenDBDocumentStore {
 INSTANCE;
 	

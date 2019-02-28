@@ -28,6 +28,7 @@ public class PatientVisitPresenter implements PatientVisitViewListener {
 		this.view = view;
 	}
 
+	// todo: please remove commented code
 //	@Override
 //	public Collection<PatientVisit> getVisistsList(boolean order) {
 //		try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {
@@ -54,6 +55,7 @@ public class PatientVisitPresenter implements PatientVisitViewListener {
 	public Collection<PatientVisit> getVisistsList(String patientId,String term,boolean order) {
 		try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {
 		   try (CleanCloseable cacheScope = session.advanced().getDocumentStore().disableAggressiveCaching()){
+		   	// todo: this line can be removed
 			session.advanced().eagerly().executeAllPendingLazyOperations();
 			Patient patient=session.load(Patient.class, patientId);
 
@@ -84,7 +86,8 @@ public class PatientVisitPresenter implements PatientVisitViewListener {
 			
 			
 			
-		   }	
+		   }
+		   // todo: please remove commented code
 //			IDocumentQuery<Patient> q=session.query(Patient.class).include("visits[].doctorId")
 //					.whereEquals("id", patientId);
 //			
@@ -136,7 +139,7 @@ public class PatientVisitPresenter implements PatientVisitViewListener {
              patient.getVisits().add(visit);
              session.store(patient);
 			 session.saveChanges();
-			 session.advanced().eagerly().executeAllPendingLazyOperations();
+			 session.advanced().eagerly().executeAllPendingLazyOperations(); // todo: this line can be removed
 			}
 		
 	}
@@ -153,7 +156,7 @@ public class PatientVisitPresenter implements PatientVisitViewListener {
 	@Override
 	public Collection<Doctor> getDoctorsList() {
 		try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {
-			return session.query(Doctor.class).distinct().toList();
+			return session.query(Doctor.class).distinct().toList(); // todo: we can remove the "distinct" call here
 		}
 
 	}

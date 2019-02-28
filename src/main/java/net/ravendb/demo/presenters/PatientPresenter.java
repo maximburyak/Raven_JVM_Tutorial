@@ -124,6 +124,7 @@ public class PatientPresenter implements PatientViewListener {
 	@Override
 	public Collection<String> getRegionsList() {
 
+		// todo: we'd like to store those in a configuration document, just like departments values in DoctorPresenter, that is not managed in the app, but we do want to write about it in the tutorial
 		return Arrays.asList("Lovech", "Sofia olast","Sofia","Plovdiv", "Varna", "Burgas", "Kustendil", "Veliko Tarnovo");
 	}
   

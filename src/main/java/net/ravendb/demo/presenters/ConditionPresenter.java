@@ -44,13 +44,14 @@ public class ConditionPresenter implements ConditionViewListener {
 	@Override
 	public void save(Condition condition) {
 		try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {
-			// clear the session
-			session.advanced().clear();
+
+			session.advanced().clear(); //todo: we don't need tho clear in the session
 			session.store(condition);
 			session.saveChanges();
 		}
 	}
 
+	//todo: do we need this?
 	@Override
 	public Condition getConditionById(String id) {	
 		return null;
@@ -71,6 +72,7 @@ public class ConditionPresenter implements ConditionViewListener {
 		}
 	}
 
+	// todo: as in other places, let's avoid having a seperate call for count
 	@Override
 	public int getConditionsCount(String term) {
 		try (IDocumentSession session = RavenDBDocumentStore.INSTANCE.getStore().openSession()) {

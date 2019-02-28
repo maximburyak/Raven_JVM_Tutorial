@@ -76,6 +76,7 @@ public class PatientVisitView extends VerticalLayout implements  PatientVisitVie
 			patientId=URLDecoder.decode(id,"UTF-8");
 			load(patientId);
 		} catch (UnsupportedEncodingException e) {
+			// todo: instead of e.printStackTrace, please have better error handling here (even writing to log)
 			e.printStackTrace();
 		}
 		

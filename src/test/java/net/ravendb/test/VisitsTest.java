@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.ravendb.client.documents.session.OrderingType;
 import org.junit.Test;
 
 import net.ravendb.client.documents.session.IDocumentSession;
@@ -50,9 +51,11 @@ public class VisitsTest {
 					   .selectKey("visits[].doctorId", "doctorId")							   
                        .selectCount()
                        .whereNotEquals("doctorId",null)
-                       .orderByDescending("count")
+                       .orderByDescending("count", OrderingType.LONG)// todo: please add OrderingType to orderBy calls that works with numeric values
                        .ofType(DoctorVisit.class)
                        .toList();
+
+			   // please use includes in the query above in order to avoid n+1 calls here
 			 Set<String> doctorIds=results.stream().map(p->p.getDoctorId()).collect(Collectors.toSet());
 			 Map<String,Doctor> map= session.load(Doctor.class,doctorIds);
 			 //fetch doctors  
